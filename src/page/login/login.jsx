@@ -1,35 +1,71 @@
 import React, {Component} from 'react'
-import {Form, Icon, Input, Button} from 'antd';
+import {Form, Icon, Input, Button, message} from 'antd';
 import 'antd/dist/antd.less';
 import './login.css'
-import logo from './images/player.gif'
+import logo from '../../assets/images/player.gif'
+
+import {reqLogin} from '../../api'
+// 内存 存储
+import memoryUtils from '../../utils/memoryUtils'
+// 本地 存储
+import storageUtils from '../../utils/storageUtils'
+
+import {Redirect} from  'react-router-dom'
+
+
+
 /*
 * 登录路由组件
 * */
 class Login extends Component {
     handleSubmit = (event) => {
         event.preventDefault();
-        this.props.form.validateFields((err, values) => {
+        this.props.form.validateFields(async (err, values) => {
             if (!err) {
-                console.log('Received values of form: ', values);
+                const {username, password} = values;
+                // promise对象
+
+                // reqLogin(username, password)
+                //     .then(response => {
+                //         console.log(response)
+                //     })
+
+                // 不使用then()来指定成功/失败的回调
+                const result = await reqLogin(username, password)
+                if (result.status === 0) {
+                    message.success('登陆成功');
+                    const user = result.data
+                    memoryUtils.user = user; //存入内存中
+                    storageUtils.saveUser(user); //存入local中
+                    // 跳转页面
+                    this.props.history.replace('/admin')
+                } else {
+                    message.error(result.msg)
+                }
             }
         });
     };
     validatePwd = (rule, value, callback) => {
         if (!value) {
             callback('请输入密码')
-        }else if (value.length < 4) {
+        } else if (value.length < 4) {
             callback('密码长度不能小于4')
-        }else if (value.length > 12) {
+        } else if (value.length > 12) {
             callback('密码不能大于12位')
-        }else if(!/^[0-9a-zA-Z]+$/.test(value)) {
+        } else if (!/^[0-9a-zA-Z]+$/.test(value)) {
             callback('必须是英文')
-        }else {
+        } else {
             callback()
         }
     }
+
     render() {
-        const { getFieldDecorator } = this.props.form;
+        // 判断用户是否登陆
+        const user = memoryUtils.user;
+        if (user && user._id) {
+            return <Redirect to="/" />
+        }
+        const {getFieldDecorator} = this.props.form;
         return (
             <div className="login">
                 <header className="login_header">
@@ -42,10 +78,10 @@ class Login extends Component {
                         <Form onSubmit={this.handleSubmit} className="login-form">
                             <Form.Item>
                                 {getFieldDecorator('username', {
-                                    rules: [{ required: true, message: 'Please input your username!' }],
+                                    rules: [{required: true, message: 'Please input your username!'}],
                                 })(
                                     <Input
-                                        prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                                        prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>}
                                         placeholder="Username"
                                     />,
                                 )}
@@ -57,7 +93,7 @@ class Login extends Component {
                                     }],
                                 })(
                                     <Input
-                                        prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                                        prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>}
                                         placeholder="Password"
                                     />,
                                 )}
@@ -74,5 +110,6 @@ class Login extends Component {
         )
     }
 }
+
 const WarpLogin = Form.create()(Login);
 export default WarpLogin

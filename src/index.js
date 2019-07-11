@@ -5,4 +5,10 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
 
-ReactDOM.render(<App/>,document.getElementById('root'));
+import storageUtils from './utils/storageUtils'
+import memoryUtils from './utils/memoryUtils'
+// 读取local中的user保存到内存中
+const user = storageUtils.getUser();
+memoryUtils.user = user
+
+ReactDOM.render(<App></App>, document.getElementById('root'));
