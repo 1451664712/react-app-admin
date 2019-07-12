@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import {Form, Icon, Input, Button, message} from 'antd';
-import 'antd/dist/antd.less';
 import './login.css'
 import logo from '../../assets/images/player.gif'
 
