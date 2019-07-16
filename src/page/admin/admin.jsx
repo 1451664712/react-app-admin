@@ -30,7 +30,7 @@ export default class Admin extends Component {
                 </Sider>
                 <Layout>
                     <Header></Header>
-                    <Content style={{background: '#fff'}}>
+                    <Content style={{backgroundColor: "#fff", margin: "20px"}}>
                         <Switch>
                             <Route path='/home' component={Home}/>
                             <Route path='/category' component={Category}/>
