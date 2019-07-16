@@ -30,5 +30,4 @@ export const reqWeather = (city) => {
             }
         })
     })
-
 }
