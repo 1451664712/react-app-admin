@@ -1,10 +1,18 @@
 import React, {Component} from 'react'
+import {withRouter} from 'react-router-dom'
+import {Modal, message } from 'antd';
 import './index.less'
 import {formateDate} from '../../utils/dateUtils'
-import memoryUtils from '../../utils/memoryUtils'
 import {reqWeather} from '../../api'
 
-export default class Header extends Component {
+import menuList from '../../config/menuConfig'
+// 内存存储
+import memoryUtils from '../../utils/memoryUtils'
+// 本地 存储
+import storageUtils from '../../utils/storageUtils'
+
+import LinkButton from '../../components/link-button'
+class Header extends Component {
     state = {
         currentTime: formateDate(Date.now()),
         dayPictureUrl: '',  //天气图片
@@ -13,7 +21,7 @@ export default class Header extends Component {
 
     // 实时获取时间
     getTime() {
-        setInterval(() => {
+        this.intervalId = setInterval(() => {
             const currentTime = formateDate(Date.now())
             this.setState({currentTime})
         }, 1000) //每隔一秒刷新一次
@@ -27,28 +35,64 @@ export default class Header extends Component {
     //         weather: result.weather //天气文本
     //     })
     // }
-     getWeather = async () => {
-        const {dayPictureUrl,weather} = await reqWeather('成都');
-        this.setState({dayPictureUrl,weather})
+    getWeather = async () => {
+        const {dayPictureUrl, weather} = await reqWeather('成都');
+        this.setState({dayPictureUrl, weather})
+    };
+    // 获取title
+    getTitle() {
+        const path = this.props.location.pathname;
+        let title = null;
+        menuList.forEach((item) => {
+            if (path === item.key) {
+                title = item.title
+            }
+            if (item.children) {
+                const cItem = item.children.find((cItem) => cItem.key === path);
+                if (cItem) {
+                    title = cItem.title
+                }
+            }
+        });
+        return title
+    }
+    //退出登录
+    logout = () => {
+        Modal.confirm({
+            content: '确定退出吗？',
+            okText: '确认',
+            cancelText: '取消',
+            onOk: () => {
+                memoryUtils.user = {};
+                storageUtils.removeUser();
+                message.success('系统已退出！')
+                this.props.history.replace('/login')
+            }
+        });
     }
 
     componentDidMount() {
-        this.getTime()
+        this.getTime();
         this.getWeather()
     }
-
+    // 组件卸载前调用
+    componentWillUnmount () {
+        clearInterval(this.intervalId)
+    }
     render() {
         const {currentTime, dayPictureUrl, weather} = this.state;
         const {username} = memoryUtils.user
+        const title = this.getTitle()
         return (
             <div className="header_nav">
                 <div className="header_top">
                     <span>欢迎，{username}</span>
-                    <a href="www.baidu.com">退出</a>
+                    <LinkButton onClick={this.logout}>退出</LinkButton>
+
                 </div>
                 <div className="header_bottom">
                     <div className="header_bottom_left">
-                        <span>首页</span>
+                        <span>{title}</span>
                     </div>
                     <div className="header_bottom_right">
                         <span>{currentTime}</span>
@@ -60,3 +104,5 @@ export default class Header extends Component {
         )
     }
 }
+
+export default withRouter(Header)

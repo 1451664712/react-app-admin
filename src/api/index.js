@@ -16,6 +16,7 @@ export const reqAddUser = (data) => ajax('/login', data, 'POST');
 
 /*
 * jsonp请求
+* 天气
 * */
 export const reqWeather = (city) => {
     return new Promise((resolve, reject) => {

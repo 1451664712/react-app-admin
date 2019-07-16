@@ -59,7 +59,6 @@ class LeftNav extends Component {
                     return path.indexOf(cItem.key) === 0  // 当前请求的是商品或其子路由界面
                 });
                 if (cItem) {
-                    console.log(cItem, item)
                     this.openKey = item.key
                 }
                 pre.push((
@@ -84,7 +83,6 @@ class LeftNav extends Component {
     }
     componentWillMount () {
         this.menuNodes = this.getMenuNode(menuList)
-        console.log(menuList)
     }
     render() {
         const path = this.props.location.pathname;

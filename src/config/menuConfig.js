@@ -62,6 +62,6 @@ const menuList = [
         key: '/order',
         icon: 'windows',
     },
-]
+];
 
 export default menuList
