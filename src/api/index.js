@@ -11,9 +11,15 @@ import { message } from 'antd'
 // 登录
 export const reqLogin = (username, password) => ajax('/login', {username, password}, 'POST');
 
-//添加用户
+// 添加用户
 export const reqAddUser = (data) => ajax('/login', data, 'POST');
 
+// 获取分类
+export const reqCategorys = (parentId) => ajax('manage/category/list', {parentId})
+// 添加分类
+export const reqAddCategorys = ({parentId, categoryName}) => ajax('manage/category/list', {parentId, categoryName}, 'POST')
+// 更新分类
+export const reqUpdateCategorys = ({parentId, categoryName}) => ajax('manage/category/update', {parentId, categoryName}, 'POST')
 /*
 * jsonp请求
 * 天气
@@ -30,4 +36,5 @@ export const reqWeather = (city) => {
             }
         })
     })
-}
+};
+
