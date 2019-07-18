@@ -19,11 +19,12 @@ export const reqCategorys = (parentId) => ajax('manage/category/list', {parentId
 // 添加分类
 export const reqAddCategorys = ({parentId, categoryName}) => ajax('manage/category/list', {parentId, categoryName}, 'POST')
 // 更新分类
-export const reqUpdateCategorys = ({parentId, categoryName}) => ajax('manage/category/update', {parentId, categoryName}, 'POST')
+export const reqUpdateCategorys = ({categoryId, categoryName}) => ajax('manage/category/update', {categoryId, categoryName}, 'POST')
 /*
 * jsonp请求
 * 天气
 * */
+
 export const reqWeather = (city) => {
     return new Promise((resolve, reject) => {
         const url = `http://api.map.baidu.com/telematics/v3/weather?location=${city}&output=json&ak=3p49MVra6urFRGOT9s8UBWr2`

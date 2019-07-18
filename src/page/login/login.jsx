@@ -20,6 +20,7 @@ class Login extends Component {
     handleSubmit = (event) => {
         event.preventDefault();
         this.props.form.validateFields(async (err, values) => {
+            console.log(values)
             if (!err) {
                 const {username, password} = values;
                 // promise对象
