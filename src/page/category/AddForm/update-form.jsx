@@ -1,3 +1,4 @@
+// 更新模块组件
 import React, {Component} from 'react'
 import PropTypes  from 'prop-types'
 import {Form, Input,} from 'antd'
@@ -23,7 +24,10 @@ class UpdateForm extends Component {
                 <Item>
                     {
                         getFieldDecorator('categoryName', {
-                            initialValue: categoryName
+                            initialValue: categoryName,
+                            rules: [{
+                                required: true, message: '分类名称不能为空'
+                            }]
                         })(
                             <Input placeholder="请输入"/>
                         )

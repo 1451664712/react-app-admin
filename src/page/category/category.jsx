@@ -30,21 +30,23 @@ export default class Category extends Component {
                         <LinkButton onClick={() => this.showUpdate(category)}>修改分类</LinkButton>&nbsp;&nbsp;
                         {/*如何向事件回调函数传递参数： 先定义一个匿名函数，在函数调用处理的函数并传入数据*/}
                         {
-                            this.state.parentId === '0' ? (<LinkButton onClick={() => {
-                                this.showSubCategorys(category)
-                            }}>查看子分类</LinkButton>) : (null)
+                            this.state.parentId === '0' ?
+                                (<LinkButton onClick={() => {
+                                    this.showSubCategorys(category)
+                                }}>查看子分类</LinkButton>) : (null)
                         }
                     </span>
                 )
             }
         ];
     };
+
     // 获取一级分类列表
-    getCategorys = async () => {
+    getCategorys = async (parentId) => {
         this.setState({loading: true});
-        const {parentId} = this.state
+        parentId = parentId || this.state.parentId;
         const result = await reqCategorys(parentId);
-        this.setState({loading: false})
+        this.setState({loading: false});
         if (result.status === 0) {
             // 取出分类数组（可能是一级 或 二级）
             const categorys = result.data;
@@ -61,7 +63,6 @@ export default class Category extends Component {
 
     // 显示指定一级分类的二级列表
     showSubCategorys = (category) => {
-        console.log(category)
         // 更新状态
         this.setState({
             parentId: category._id,
@@ -90,8 +91,27 @@ export default class Category extends Component {
 
     // 添加确认
     addCategory = () => {
-        this.setState({
-            showStatus: 0
+        this.form.validateFields(async (err, value) => {
+            if (!err) {
+                // 隐藏确认框
+                this.setState({
+                    showStatus: 0
+                })
+                // 发请求更新分类
+                const {parentId, categoryName} = value;
+                this.form.resetFields();
+                const result = await reqAddCategorys({parentId, categoryName});
+                if (result.status === 0) {
+                    if (parentId === this.state.parentId) {
+                        // 重新显示列表
+                        this.getCategorys()
+                    } else if (parentId === '0') {
+                        this.getCategorys('0')
+                    }
+                } else {
+                    message.error('获取信息失败！')
+                }
+            }
         })
     };
 
@@ -103,25 +123,26 @@ export default class Category extends Component {
         })
     };
     // 修改分类确定
-    updateCategory = async () => {
-        // 隐藏模态框
-        this.setState({
-            showStatus: 0
-        });
-        // 发请求更新分类
-        const categoryId = this.category._id;
-        const categoryName = this.form.getFieldValue('categoryName');
-        console.log(categoryId, categoryName)
-
-        this.form.resetFields()
-        const result = await reqUpdateCategorys({categoryId, categoryName});
-        if (result.status === 0) {
-            // 重新显示列表
-            this.getCategorys()
-        } else {
-            message.error('获取信息失败！')
-        }
-
+    updateCategory = () => {
+        this.form.validateFields(async (err, value) => {
+            if (!err) {
+                // 隐藏模态框
+                this.setState({
+                    showStatus: 0
+                });
+                // 发请求更新分类
+                const categoryId = this.category._id;
+                const categoryName = value;
+                this.form.resetFields();
+                const result = await reqUpdateCategorys({categoryId, categoryName});
+                if (result.status === 0) {
+                    // 重新显示列表
+                    this.getCategorys()
+                } else {
+                    message.error('获取信息失败！')
+                }
+            }
+        })
     };
 
     // 隐藏模态框
@@ -152,7 +173,7 @@ export default class Category extends Component {
             <span>
                 <Breadcrumb onClick={this.showCategorys}>
                     <Breadcrumb.Item>
-                        <LinkButton onClick={this.showCategorys}>一级分类</LinkButton>
+                        <LinkButton>一级分类</LinkButton>
                     </Breadcrumb.Item>
                 </Breadcrumb>
             </span>
@@ -174,7 +195,7 @@ export default class Category extends Component {
         );
 
         return (
-            <Card title={title} extra={extra} style={{width: '100%'}}>
+            <Card title={title} extra={extra} style={{width: '100%'}} bordered={false}>
                 <Table
                     bordered
                     rowKey="_id"
@@ -192,7 +213,13 @@ export default class Category extends Component {
                     onOk={this.addCategory}
                     onCancel={this.handleCancel}
                 >
-                    <AddForm/>
+                    <AddForm
+                        categorys={categorys}
+                        parentId={parentId}
+                        setForm={(form) => {
+                            this.form = form
+                        }}
+                    />
                 </Modal>
                 <Modal
                     title="修改分类"
@@ -202,7 +229,9 @@ export default class Category extends Component {
                 >
                     <UpdateForm
                         categoryName={category.name}
-                        setForm={(form) => {this.form = form}}
+                        setForm={(form) => {
+                            this.form = form
+                        }}
                     />
                 </Modal>
             </Card>
