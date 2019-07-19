@@ -28,8 +28,8 @@ class AddForm extends Component {
                             <Select>
                                 <Option value='0'>一级分类</Option>
                                 {
-                                    categorys.map(item => (
-                                        <Option value={item._id}>{item.name}</Option>
+                                    categorys.map((item, index) => (
+                                        <Option key={index} value={item._id}>{item.name}</Option>
                                     ))
                                 }
                             </Select>

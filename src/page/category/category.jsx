@@ -132,7 +132,7 @@ export default class Category extends Component {
                 });
                 // 发请求更新分类
                 const categoryId = this.category._id;
-                const categoryName = value;
+                const {categoryName} = value;
                 this.form.resetFields();
                 const result = await reqUpdateCategorys({categoryId, categoryName});
                 if (result.status === 0) {

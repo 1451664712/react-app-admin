@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {Switch, Route, Redirect} from 'react-router-dom'
+import './product.less'
 // 子组件
 import Home from './home'
 import AddUpdate from './add-update'
