@@ -15,7 +15,7 @@ export const reqLogin = (username, password) => ajax('/login', {username, passwo
 export const reqAddUser = (data) => ajax('/login', data, 'POST');
 
 // 获取分类
-export const reqCategorys = (parentId) => ajax('manage/category/list', {parentId});
+export const reqCategorys = (parentId) => ajax('/manage/category/list', {parentId});
 // 添加分类
 export const reqAddCategorys = ({parentId, categoryName}) => ajax('manage/category/add', {parentId, categoryName}, 'POST');
 // 更新分类
@@ -34,6 +34,14 @@ export const reqSearchProducts = ({pageNum, pageSize, searchName, searchType}) =
     [searchType]: searchName
 });
 
+// 获取一个分类
+export const reqCategory = (categoryId) => ajax('manage/category/info', {categoryId});
+
+// 商品上/下架
+export const reqUpdateStatus = ({productId, status}) => ajax('manage/product/updateStatus', {productId, status}, 'POST')
+
+// 删除图片
+export const reqDeleteImg = (name) => ajax('/manage/img/delete', {name}, 'POST')
 /*
 * jsonp请求
 * 天气
