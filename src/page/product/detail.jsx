@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {BASE_IMG_URL} from "../../utils/constants";
-import {Card, Select, Input, Button, Table, Icon, List} from 'antd'
+import {Card, Button, Icon, List} from 'antd'
 import {reqCategory} from "../../api";
 
 const Item = List.Item
@@ -24,6 +24,8 @@ export default class ProductDetail extends Component {
     }
     render() {
         const {desc, detail, name, price, imgs} = this.props.location.state;
+        console.log(imgs)
+        const {cName1, cName2} = this.state
         const title = (
             <span>
                 <Icon type="left-circle"
@@ -64,7 +66,7 @@ export default class ProductDetail extends Component {
                     </Item>
                     <Item>
                         <span className='left'>所属分类:</span>
-                        <span>电脑-笔记本</span>
+                        <span>{cName1}-{cName2}</span>
                     </Item>
                     <Item>
                         <span className='left'>商品详情:</span>

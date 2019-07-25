@@ -25,7 +25,7 @@ export default class PicturesWall extends React.Component {
         let fileList = []
         const {imgs} = this.props
         if (imgs && imgs.length > 0) {
-            imgs.map((item, index) => ({
+            fileList = imgs.map((item, index) => ({
                 uid: -index,
                 name: item,
                 status: 'done',
@@ -63,7 +63,6 @@ export default class PicturesWall extends React.Component {
                 file = fileList[fileList.length - 1]
                 file.name = name
                 file.url = url
-                console.log(file, 111)
             } else {
                 message.error('上传失败')
             }

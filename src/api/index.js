@@ -4,44 +4,51 @@
 import ajax from './ajax'
 import jsonp from 'jsonp'
 import { message } from 'antd'
+const BASE = ''
 // export  function login(user, pass) {
 //     return ajax('/login',{user, pass}, 'POST')
 // }
 
 // 登录
-export const reqLogin = (username, password) => ajax('/login', {username, password}, 'POST');
+export const reqLogin = (username, password) => ajax(BASE + '/login', {username, password}, 'POST');
 
 // 添加用户
-export const reqAddUser = (data) => ajax('/login', data, 'POST');
+export const reqAddUser = (data) => ajax(BASE + '/login', data, 'POST');
 
 // 获取分类
-export const reqCategorys = (parentId) => ajax('/manage/category/list', {parentId});
+export const reqCategorys = (parentId) => ajax(BASE + '/manage/category/list', {parentId});
 // 添加分类
-export const reqAddCategorys = ({parentId, categoryName}) => ajax('manage/category/add', {parentId, categoryName}, 'POST');
+export const reqAddCategorys = ({parentId, categoryName}) => ajax(BASE + '/manage/category/add', {parentId, categoryName}, 'POST');
 // 更新分类
-export const reqUpdateCategorys = ({categoryId, categoryName}) => ajax('manage/category/update', {categoryId, categoryName}, 'POST');
+export const reqUpdateCategorys = ({categoryId, categoryName}) => ajax(BASE + '/manage/category/update', {categoryId, categoryName}, 'POST');
 
 // 获取商品分页列表
-export const reqProducts = (pageNum, pageSize) => ajax('manage/product/list', {pageNum, pageSize});
+export const reqProducts = (pageNum, pageSize) => ajax(BASE + '/manage/product/list', {pageNum, pageSize});
 
 /*搜索商品分页列表(根据商品名称/ 商品描述)
 searchType：搜索类型，productName/ productDesc
 将参数的值作为属性名，将参数用[]包起来
 */
-export const reqSearchProducts = ({pageNum, pageSize, searchName, searchType}) => ajax('manage/product/search', {
+export const reqSearchProducts = ({pageNum, pageSize, searchName, searchType}) => ajax(BASE + '/manage/product/search', {
     pageNum,
     pageSize,
     [searchType]: searchName
 });
 
 // 获取一个分类
-export const reqCategory = (categoryId) => ajax('manage/category/info', {categoryId});
+export const reqCategory = (categoryId) => ajax(BASE + '/manage/category/info', {categoryId});
 
 // 商品上/下架
-export const reqUpdateStatus = ({productId, status}) => ajax('manage/product/updateStatus', {productId, status}, 'POST')
+export const reqUpdateStatus = (productId, status) => ajax(BASE + '/manage/product/updateStatus', {productId, status}, 'POST')
 
 // 删除图片
-export const reqDeleteImg = (name) => ajax('/manage/img/delete', {name}, 'POST')
+export const reqDeleteImg = (name) => ajax(BASE + '/manage/img/delete', {name}, 'POST')
+
+// 添加商品 // 更新商品
+export const reqAddOrUpdateProduct = (product) => ajax(BASE + '/manage/product/' + ( product._id?'update':'add'), product, 'POST')
+
+// // 更新商品
+// export const reqUpdateProduct = (data) => ajax('manage/product/update', {data}, 'POST')
 /*
 * jsonp请求
 * 天气

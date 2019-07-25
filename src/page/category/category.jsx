@@ -46,7 +46,6 @@ export default class Category extends Component {
         this.setState({loading: true});
         parentId = parentId || this.state.parentId;
         const result = await reqCategorys(parentId);
-        console.log(result)
         this.setState({loading: false});
         if (result.status === 0) {
             // 取出分类数组（可能是一级 或 二级）
