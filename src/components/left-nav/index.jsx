@@ -104,7 +104,6 @@ class LeftNav extends Component {
                     theme="dark"
                 >
                     {
-                        // this.getMenuNodes(menuList)
                         // this.getMenuNode(menuList)
                         this.menuNodes
                     }

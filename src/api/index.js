@@ -55,6 +55,15 @@ export const reqAddRole = (roleName) => ajax(BASE + '/manage/role/add', {roleNam
 
 // 更新角色
 export const reqUpdateRole = (data) => ajax(BASE + '/manage/role/update', data, 'POST')
+
+// 获取所有用户
+export const reqUsers = () => ajax(BASE + '/manage/user/list')
+
+// 添加用户
+export const reqAdduser = (data) => ajax(BASE + '/manage/user/add', data, 'POST')
+
+// 删除用户
+export const reqDeleteUser = (userId) => ajax(BASE + '/manage/user/delete', {userId}, 'POST')
 // // 更新商品
 // export const reqUpdateProduct = (data) => ajax('manage/product/update', {data}, 'POST')
 /*

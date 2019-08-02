@@ -48,7 +48,9 @@ class Header extends Component {
                 title = item.title
             }
             if (item.children) {
-                const cItem = item.children.find((cItem) => path.indexOf(cItem.key) === 0);
+                const cItem = item.children.find((cItem) => {
+                    return path.indexOf(cItem.key) === 0
+                });
                 if (cItem) {
                     title = cItem.title
                 }
@@ -83,6 +85,7 @@ class Header extends Component {
         const {currentTime, dayPictureUrl, weather} = this.state;
         const {username} = memoryUtils.user
         const title = this.getTitle()
+        console.log(title)
         return (
             <div className="header_nav">
                 <div className="header_top">

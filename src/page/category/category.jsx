@@ -102,8 +102,9 @@ export default class Category extends Component {
                 this.form.resetFields();
                 const result = await reqAddCategorys({parentId, categoryName});
                 if (result.status === 0) {
+                    // 添加分类的就是当前分类列表下的分类
                     if (parentId === this.state.parentId) {
-                        // 重新显示列表
+                        // 重新获取当前分类列表显示
                         this.getCategorys()
                     } else if (parentId === '0') {
                         this.getCategorys('0')
@@ -167,7 +168,7 @@ export default class Category extends Component {
         const {parentId, categorys, subCategorys, loading, parentName} = this.state;
 
         // 读取指定分类
-        const category = this.category || {}; // 如果么有就为空对象
+        const category = this.category || {}; // 如果没有就为空对象
 
         const title = parentId === '0' ? (
             <span>
