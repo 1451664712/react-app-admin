@@ -9,8 +9,7 @@ class AddForm extends Component {
     static propTypes = {
         setForm: PropTypes.func.isRequired,
         roles: PropTypes.array.isRequired,
-        type: PropTypes.number.isRequired,
-        user: PropTypes.object.isRequired
+        user: PropTypes.object
     }
 
     componentWillMount() {
@@ -23,33 +22,37 @@ class AddForm extends Component {
             wrapperCol: {span: 15}
         };
         const {getFieldDecorator} = this.props.form
-        const {roles, type, user} = this.props
+        const {roles, user} = this.props
         return (
             <Form {...formItemLayout}>
                 <Item label="用户名">
                     {
                         getFieldDecorator('username', {
-                            initialValue: type === 0 ? '' : user.username,
+                            initialValue: user.username,
                             rules: [
                                 {required: true, message: '必须输入用户名'}
                             ]
                         })(<Input placeholder="请输入用户名"/>)
                     }
                 </Item>
-                <Item label="密码">
-                    {
-                        getFieldDecorator('password', {
-                            initialValue: type === 0 ? '' : user.password,
-                            rules: [
-                                {required: true, message: '必须输入密码'}
-                            ]
-                        })(<Input type="password" placeholder="请输入密码"/>)
-                    }
-                </Item>
+                {
+                    user._id ? null : (
+                        <Item label="密码">
+                            {
+                                getFieldDecorator('password', {
+                                    initialValue: user.password,
+                                    rules: [
+                                        {required: true, message: '必须输入密码'}
+                                    ]
+                                })(<Input type="password" placeholder="请输入密码"/>)
+                            }
+                        </Item>
+                    )
+                }
                 <Item label="手机号">
                     {
                         getFieldDecorator('phone', {
-                            initialValue: type === 0 ? '' : user.phone,
+                            initialValue: user.phone,
                             rules: [
                                 {required: true, message: '必须输入手机号'}
                             ]
@@ -59,7 +62,7 @@ class AddForm extends Component {
                 <Item label="邮箱">
                     {
                         getFieldDecorator('email', {
-                            initialValue: type === 0 ? '' : user.email,
+                            initialValue: user.email,
                             rules: [
                                 {required: true, message: '必须输入邮箱'},
                                 {

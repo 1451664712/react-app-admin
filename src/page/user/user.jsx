@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {Card, Icon, Button, Table, message, Breadcrumb, Modal} from 'antd';
 import LinkButton from "../../components/link-button";
-import {reqUsers, reqAdduser, reqDeleteUser} from "../../api";
+import {reqUsers, reqDeleteUser, reqAddOrUpdateUser} from "../../api";
 import {formateDate} from "../../utils/dateUtils";
 import AddForm from "./add-form";
 import memoryUtils from "../../utils/memoryUtils";
@@ -13,8 +13,6 @@ export default class User extends Component {
         users: [],
         roles: [],
         showStatus: 0, //弹框状态
-        type: 0,
-        user: {}
     }
     initColumns = () => {
         this.columns = [
@@ -45,8 +43,12 @@ export default class User extends Component {
                 width: 300,
                 render: (user) => (
                     <span>
-                        <LinkButton onClick={() => {this.updateUser(user)}}>修改</LinkButton>&nbsp;&nbsp;
-                        <LinkButton onClick={() => {this.deleteUser(user)}}>删除</LinkButton>&nbsp;&nbsp;
+                        <LinkButton onClick={() => {
+                            this.showUpdateUser(user)
+                        }}>修改</LinkButton>&nbsp;&nbsp;
+                        <LinkButton onClick={() => {
+                            this.deleteUser(user)
+                        }}>删除</LinkButton>&nbsp;&nbsp;
                     </span>
                 )
             }
@@ -60,18 +62,26 @@ export default class User extends Component {
         this.roleNames = roleNames
     }
 
-    addShow = () => {
+    showAddUser = () => {
+        this.user = null
         this.setState({showStatus: 1})
     }
 
-    addUser = () => {
-        this.form.validateFields(async (err, values) => {
+    // 添加用户
+    addUserAndUpdateUser = () => {
+        this.form.validateFields(async (err) => {
             if (!err) {
                 this.setState({showStatus: 0})
+                const user = this.form.getFieldsValue()
+                console.log("user", user)
                 this.form.resetFields();
-                const result = await reqAdduser(values)
+
+                if (this.user) {
+                    user._id = this.user._id
+                }
+                const result = await reqAddOrUpdateUser(user)
                 if (result.status === 0) {
-                    message.success('添加用户成功')
+                    message.success(`${this.user ? '修改' : '添加'}用户成功`)
                     this.getUsers()
                 } else {
                     message.error(result.msg)
@@ -79,15 +89,16 @@ export default class User extends Component {
             }
         })
     }
-
+    // 取消弹出框
     handleCancel = () => {
         this.setState({showStatus: 0})
+        this.form.resetFields();
     }
 
     // 删除用户
     deleteUser = (user) => {
         Modal.confirm({
-            title: '你确定要删除吗？',
+            title: `你确定要删除${user.username}吗？`,
             okText: '确认',
             cancelText: '取消',
             onOk: async () => {
@@ -101,10 +112,12 @@ export default class User extends Component {
     }
 
     // 修改用户
-    updateUser = (user) => {
-        this.setState({type: 1, showStatus: 1})
-        this.setState({user})
+    showUpdateUser = (user) => {
+        console.log(user)
+        this.user = user
+        this.setState({showStatus: 1})
     }
+    // 获取用户列表
     getUsers = async () => {
         this.setState({loading: true})
         const result = await reqUsers()
@@ -125,10 +138,10 @@ export default class User extends Component {
     }
 
     render() {
-        const {users, user, roles, loading, showStatus, type} = this.state
-        console.log(user)
+        const {users, roles, loading, showStatus} = this.state
+        const user = this.user || {}
         const title = (
-            <Button type="primary" onClick={this.addShow}>创建用户</Button>
+            <Button type="primary" onClick={this.showAddUser}>创建用户</Button>
         )
         return (
             <Card title={title} bordered={false}>
@@ -140,14 +153,14 @@ export default class User extends Component {
                     bordered
                 />
                 <Modal
-                    title={type === 0 ? '添加用户' : '编辑用户'}
+                    title={user._id ? '编辑用户' : '添加用户'}
                     visible={showStatus === 1}
-                    onOk={type === 0 ? this.addUser : this.updateUser}
+                    onOk={this.addUserAndUpdateUser}
                     onCancel={this.handleCancel}
                 >
                     <AddForm setForm={(form) => {
                         this.form = form
-                    }} roles={roles} type={type} user={user}/>
+                    }} roles={roles} user={user}/>
                 </Modal>
             </Card>
         )
