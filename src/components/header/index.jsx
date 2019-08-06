@@ -10,7 +10,6 @@ import menuList from '../../config/menuConfig'
 import memoryUtils from '../../utils/memoryUtils'
 // 本地 存储
 import storageUtils from '../../utils/storageUtils'
-
 import LinkButton from '../../components/link-button'
 class Header extends Component {
     state = {
@@ -29,7 +28,9 @@ class Header extends Component {
 
     // 获取天气
     getWeather = async () => {
-        const {dayPictureUrl, weather} = await reqWeather('成都');
+        // 调用接口请求异步获取数据
+        const {dayPictureUrl, weather} = await reqWeather('成都')
+        // 更新状态
         this.setState({dayPictureUrl, weather})
     };
     // 获取title
