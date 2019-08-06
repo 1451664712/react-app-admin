@@ -28,13 +28,6 @@ class Header extends Component {
     }
 
     // 获取天气
-    // async getWeather() {
-    //     const result = await reqWeather('成都')
-    //     this.setState({
-    //         dayPictureUrl: result.dayPictureUrl,  //天气图片
-    //         weather: result.weather //天气文本
-    //     })
-    // }
     getWeather = async () => {
         const {dayPictureUrl, weather} = await reqWeather('成都');
         this.setState({dayPictureUrl, weather})
