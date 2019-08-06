@@ -7,6 +7,7 @@ import {reqRoles, reqAddRole, reqUpdateRole} from "../../api";
 import memoryUtils from "../../utils/memoryUtils";
 // 时间格式化
 import {formateDate} from "../../utils/dateUtils";
+import storageUtils from "../../utils/storageUtils";
 
 
 export default class User extends Component {
@@ -111,10 +112,17 @@ export default class User extends Component {
         // 请求更新
         const result = await reqUpdateRole(role)
         if (result.status === 0) {
-            message.success('更新成功')
-            this.setState({
-                roles: [...this.state.roles]
-            })
+           if (role._id === memoryUtils.user.role_id) {
+               message.success('当前角色权限变更，请重新登录')
+               memoryUtils.user = {}
+               storageUtils.removeUser()
+               this.props.history.replace('/login')
+           } else {
+               message.success('更新成功')
+               this.setState({
+                   roles: [...this.state.roles]
+               })
+           }
         }
     }
     handleCancel = () => {
@@ -145,7 +153,13 @@ export default class User extends Component {
                     bordered
                     rowKey="_id"
                     onRow={this.onRow}
-                    rowSelection={{type: 'radio', selectedRowKeys: [role._id]}}
+                    rowSelection={{
+                        type: 'radio',
+                        selectedRowKeys: [role._id],
+                        onSelect: (role) => {
+                            this.setState({role})
+                        }
+                    }}
                     dataSource={roles}
                     columns={this.columns}
                     pagination={{

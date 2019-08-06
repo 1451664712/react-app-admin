@@ -1,11 +1,10 @@
 import React, {Component} from 'react'
-import {Card, Icon, Button, Table, message, Breadcrumb, Modal} from 'antd';
+import {Card, Button, Table, message, Modal} from 'antd';
 import LinkButton from "../../components/link-button";
 import {reqUsers, reqDeleteUser, reqAddOrUpdateUser} from "../../api";
 import {formateDate} from "../../utils/dateUtils";
 import AddForm from "./add-form";
-import memoryUtils from "../../utils/memoryUtils";
-import storageUtils from "../../utils/storageUtils";
+
 
 export default class User extends Component {
     state = {
@@ -73,7 +72,6 @@ export default class User extends Component {
             if (!err) {
                 this.setState({showStatus: 0})
                 const user = this.form.getFieldsValue()
-                console.log("user", user)
                 this.form.resetFields();
 
                 if (this.user) {
@@ -113,7 +111,6 @@ export default class User extends Component {
 
     // 修改用户
     showUpdateUser = (user) => {
-        console.log(user)
         this.user = user
         this.setState({showStatus: 1})
     }

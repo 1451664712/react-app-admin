@@ -40,7 +40,6 @@ export default class ProductHome extends Component {
                 width: 100,
                 // dataIndex: 'status',
                 render: (product) => {
-                    console.log(product)
                     const {status, _id} = product
                     const newStatus = status===1 ? 2 : 1
                     return (
@@ -152,6 +151,7 @@ export default class ProductHome extends Component {
                     dataSource={products}
                     columns={this.columns}
                     pagination={{
+                        current: this.pageNum,
                         total: total,
                         defaultPageSize: PAGE_SIZE,
                         showQuickJumper: true,
