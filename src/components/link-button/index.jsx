@@ -7,4 +7,7 @@ class LinkButton extends Component {
         )
     }
 }
+// function LinkButton(props) {
+//     return <button {...props} className="link_button"></button>
+// }
 export default LinkButton

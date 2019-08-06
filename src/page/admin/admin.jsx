@@ -24,8 +24,8 @@ export default class Admin extends Component {
             return <Redirect to="/login"/>
         }
         return (
-            <Layout style={{height: '100%'}}>
-                <Sider width="256">
+            <Layout style={{minHeight: '100%'}}>
+                <Sider width="300">
                     <LeftNav />
                 </Sider>
                 <Layout>

@@ -77,11 +77,11 @@ class Login extends Component {
                         <Form onSubmit={this.handleSubmit} className="login-form">
                             <Form.Item>
                                 {getFieldDecorator('username', {
-                                    rules: [{required: true, message: 'Please input your username!'}],
+                                    rules: [{required: true, message: '请输入用户名!'}],
                                 })(
                                     <Input
                                         prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                        placeholder="Username"
+                                        placeholder="用户名"
                                     />,
                                 )}
                             </Form.Item>
@@ -92,8 +92,9 @@ class Login extends Component {
                                     }],
                                 })(
                                     <Input
-                                        prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>}
-                                        placeholder="Password"
+                                        prefix={<Icon type="lock" style={{color: 'rgba(0,0,0,.25)'}}/>}
+                                        placeholder="密码"
+                                        type="password"
                                     />,
                                 )}
                             </Form.Item>
